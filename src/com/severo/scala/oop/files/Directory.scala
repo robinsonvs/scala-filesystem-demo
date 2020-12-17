@@ -1,5 +1,6 @@
 package com.severo.scala.oop.files
 
+import com.severo.scala.oop.files.Directory.SEPARATOR
 import com.severo.scala.oop.filesystem.FilesystemException
 
 import scala.annotation.tailrec
@@ -18,6 +19,14 @@ class Directory(override val parentPath: String, override val name: String, val 
   def findDescendant(path: List[String]): Directory =
     if (path.isEmpty) this
     else findEntry(path.head).asDirectory.findDescendant(path.tail)
+
+  def findDescendant(relativePath: String): Directory =
+    if (relativePath.isEmpty) this
+    else findDescendant(relativePath.split(Directory.SEPARATOR).toList)
+
+  def removeEntry(entryName: String): Directory =
+    if (!hasEntry(entryName)) this
+    else new Directory(parentPath, name, contents.filter(x => !x.name.equals(entryName)))
 
   def addEntry(newEntry: DirEntry): Directory =
     new Directory(parentPath, name, contents :+ newEntry)
