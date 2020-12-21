@@ -8,13 +8,21 @@ import com.severo.scala.oop.files.Directory
 object FileSystem extends App {
 
   val root = Directory.ROOT
-  var state = State(root, root)
-  val scanner = new Scanner(System.in)
+  /*
+    [1,2,3,4]
+    0 (op) 1 => 1
+    1 (op) 2 => 3
+    3 (op) 3 => 6
+    6 (op) 4 => last value, 10
 
-  while(true) {
-    state.show
-    val input = scanner.nextLine()
-    state = Command.from(input).apply(state)
-  }
+    List(1,2,3,4).foldLeft(0)((x, y) => x + y )
+   */
+  val initiateState = State(root, root)
+  initiateState.show
+  io.Source.stdin.getLines().foldLeft(initiateState)((state, line) => {
+    val newState = Command.from(line).apply(state)
+    newState.show
+    newState
+  })
 
 }
